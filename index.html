@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta
+      name="description"
+      content="A JavaScript dashboard for reviewing AI training data, assigning sentiment labels, and tracking annotation progress."
+    />
+
+    <title>Annotation Review Dashboard</title>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <header class="site-header">
+      <div class="header-content">
+        <p class="eyebrow">AI Data Quality Project</p>
+
+        <h1>Annotation Review Dashboard</h1>
+
+        <p class="header-description">
+          Review text samples, assign sentiment labels, record confidence, and
+          flag ambiguous examples.
+        </p>
+      </div>
+    </header>
+
+    <main class="dashboard">
+      <section class="progress-section">
+        <div class="progress-details">
+          <span>
+            Sample
+            <strong id="currentSampleNumber">1</strong>
+            of
+            <strong id="totalSamples">0</strong>
+          </span>
+
+          <span>
+            Completed:
+            <strong id="completedCount">0</strong>
+          </span>
+        </div>
+
+        <div
+          class="progress-bar"
+          role="progressbar"
+          aria-label="Annotation progress"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="0"
+        >
+          <div id="progressFill" class="progress-fill"></div>
+        </div>
+      </section>
+
+      <section class="annotation-card">
+        <div class="card-heading">
+          <div>
+            <p class="section-label">Text sample</p>
+            <h2>Review the content below</h2>
+          </div>
+
+          <span id="sampleId" class="sample-id">Sample ID</span>
+        </div>
+
+        <blockquote id="sampleText" class="sample-text">
+          Loading sample...
+        </blockquote>
+
+        <div class="form-group">
+          <h3>Select a sentiment label</h3>
+
+          <div class="label-options">
+            <button class="label-button" type="button" data-label="Positive">
+              Positive
+            </button>
+
+            <button class="label-button" type="button" data-label="Neutral">
+              Neutral
+            </button>
+
+            <button class="label-button" type="button" data-label="Negative">
+              Negative
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confidence">
+            Confidence level:
+            <strong id="confidenceValue">3</strong>/5
+          </label>
+
+          <input id="confidence" type="range" min="1" max="5" value="3" />
+        </div>
+
+        <div class="form-group checkbox-group">
+          <input id="ambiguous" type="checkbox" />
+
+          <label for="ambiguous">
+            Flag this sample as ambiguous or difficult
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label for="reviewNotes">Reviewer notes</label>
+
+          <textarea
+            id="reviewNotes"
+            rows="4"
+            placeholder="Explain any uncertainty, edge case, or quality concern..."
+          ></textarea>
+        </div>
+
+        <p id="statusMessage" class="status-message" aria-live="polite"></p>
+
+        <div class="action-buttons">
+          <button id="skipButton" class="secondary-button" type="button">
+            Skip Sample
+          </button>
+
+          <button id="submitButton" class="primary-button" type="button">
+            Submit Annotation
+          </button>
+        </div>
+      </section>
+
+      <section class="statistics-section">
+        <h2>Annotation Statistics</h2>
+
+        <div class="statistics-grid">
+          <article class="stat-card">
+            <span class="stat-label">Reviewed</span>
+            <strong id="reviewedCount" class="stat-number">0</strong>
+          </article>
+
+          <article class="stat-card">
+            <span class="stat-label">Positive</span>
+            <strong id="positiveCount" class="stat-number">0</strong>
+          </article>
+
+          <article class="stat-card">
+            <span class="stat-label">Neutral</span>
+            <strong id="neutralCount" class="stat-number">0</strong>
+          </article>
+
+          <article class="stat-card">
+            <span class="stat-label">Negative</span>
+            <strong id="negativeCount" class="stat-number">0</strong>
+          </article>
+
+          <article class="stat-card">
+            <span class="stat-label">Flagged</span>
+            <strong id="flaggedCount" class="stat-number">0</strong>
+          </article>
+
+          <article class="stat-card">
+            <span class="stat-label">Remaining</span>
+            <strong id="remainingCount" class="stat-number">0</strong>
+          </article>
+        </div>
+      </section>
+
+      <section class="review-history-section">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">Quality record</p>
+            <h2>Recent annotations</h2>
+          </div>
+
+          <button id="clearHistoryButton" class="text-button" type="button">
+            Clear history
+          </button>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Sample</th>
+                <th>Label</th>
+                <th>Confidence</th>
+                <th>Flagged</th>
+              </tr>
+            </thead>
+
+            <tbody id="historyTableBody">
+              <tr id="emptyHistoryRow">
+                <td colspan="4">No annotations submitted yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        Built with HTML, CSS, and JavaScript as an AI data annotation portfolio
+        project by jfharrod@liberty.edu
+      </p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
