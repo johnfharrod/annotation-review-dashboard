@@ -1,11 +1,5 @@
 "use strict";
 
-/*
-  Annotation Review Dashboard
-  Built with vanilla JavaScript.
-*/
-
-// Sample dataset
 const samples = [
   {
     id: "SAMPLE-001",
@@ -49,12 +43,10 @@ const samples = [
   },
 ];
 
-// Application state
 let currentSampleIndex = 0;
 let selectedLabel = "";
 let annotations = loadAnnotations();
 
-// Page elements
 const sampleText = document.getElementById("sampleText");
 const sampleId = document.getElementById("sampleId");
 const currentSampleNumber = document.getElementById("currentSampleNumber");
@@ -78,12 +70,9 @@ const clearHistoryButton = document.getElementById("clearHistoryButton");
 const historyTableBody = document.getElementById("historyTableBody");
 const labelButtons = document.querySelectorAll(".label-button");
 
-// Load saved annotations from the browser
 function loadAnnotations() {
   try {
-    const savedAnnotations = localStorage.getItem(
-      "annotationDashboardRecords"
-    );
+    const savedAnnotations = localStorage.getItem("annotationDashboardRecords");
 
     return savedAnnotations ? JSON.parse(savedAnnotations) : [];
   } catch (error) {
@@ -92,19 +81,17 @@ function loadAnnotations() {
   }
 }
 
-// Save annotations in the browser
 function saveAnnotations() {
   try {
     localStorage.setItem(
       "annotationDashboardRecords",
-      JSON.stringify(annotations)
+      JSON.stringify(annotations),
     );
   } catch (error) {
     console.error("Unable to save annotations:", error);
   }
 }
 
-// Display the current sample
 function displayCurrentSample() {
   if (currentSampleIndex >= samples.length) {
     showCompletionScreen();
@@ -122,7 +109,6 @@ function displayCurrentSample() {
   updateStatistics();
 }
 
-// Select a sentiment label
 function selectLabel(event) {
   selectedLabel = event.currentTarget.dataset.label;
 
@@ -136,7 +122,6 @@ function selectLabel(event) {
   showStatus(`${selectedLabel} label selected.`, "success");
 }
 
-// Submit an annotation
 function submitAnnotation() {
   if (currentSampleIndex >= samples.length) {
     showStatus("All samples have already been reviewed.", "warning");
@@ -146,7 +131,7 @@ function submitAnnotation() {
   if (!selectedLabel) {
     showStatus(
       "Please select Positive, Neutral, or Negative before submitting.",
-      "error"
+      "error",
     );
     return;
   }
@@ -163,9 +148,8 @@ function submitAnnotation() {
     reviewedAt: new Date().toISOString(),
   };
 
-  // Replace an old record if this sample was previously reviewed
   const existingIndex = annotations.findIndex(
-    (item) => item.sampleId === currentSample.id
+    (item) => item.sampleId === currentSample.id,
   );
 
   if (existingIndex >= 0) {
@@ -184,7 +168,6 @@ function submitAnnotation() {
   }, 400);
 }
 
-// Skip the current sample
 function skipSample() {
   if (currentSampleIndex >= samples.length) {
     showStatus("There are no remaining samples to skip.", "warning");
@@ -196,7 +179,6 @@ function skipSample() {
   showStatus("Sample skipped.", "warning");
 }
 
-// Reset the annotation form
 function resetForm() {
   selectedLabel = "";
   confidenceInput.value = "3";
@@ -212,30 +194,26 @@ function resetForm() {
   clearStatus();
 }
 
-// Update confidence number
 function updateConfidenceValue() {
   confidenceValue.textContent = confidenceInput.value;
 }
 
-// Update dashboard statistics
 function updateStatistics() {
   const totalReviewed = annotations.length;
 
   const totalPositive = annotations.filter(
-    (item) => item.label === "Positive"
+    (item) => item.label === "Positive",
   ).length;
 
   const totalNeutral = annotations.filter(
-    (item) => item.label === "Neutral"
+    (item) => item.label === "Neutral",
   ).length;
 
   const totalNegative = annotations.filter(
-    (item) => item.label === "Negative"
+    (item) => item.label === "Negative",
   ).length;
 
-  const totalFlagged = annotations.filter(
-    (item) => item.flagged
-  ).length;
+  const totalFlagged = annotations.filter((item) => item.flagged).length;
 
   const remaining = Math.max(samples.length - totalReviewed, 0);
 
@@ -260,14 +238,13 @@ function updateStatistics() {
   if (progressBar) {
     progressBar.setAttribute(
       "aria-valuenow",
-      String(Math.round(progressPercentage))
+      String(Math.round(progressPercentage)),
     );
   }
 
   renderHistory();
 }
 
-// Display submitted annotations
 function renderHistory() {
   historyTableBody.innerHTML = "";
 
@@ -297,21 +274,15 @@ function renderHistory() {
     confidenceCell.textContent = `${annotation.confidence}/5`;
     flaggedCell.textContent = annotation.flagged ? "Yes" : "No";
 
-    row.append(
-      sampleCell,
-      labelCell,
-      confidenceCell,
-      flaggedCell
-    );
+    row.append(sampleCell, labelCell, confidenceCell, flaggedCell);
 
     historyTableBody.appendChild(row);
   });
 }
 
-// Clear all saved annotations
 function clearHistory() {
   const confirmed = window.confirm(
-    "Are you sure you want to remove all saved annotations?"
+    "Are you sure you want to remove all saved annotations?",
   );
 
   if (!confirmed) {
@@ -327,7 +298,6 @@ function clearHistory() {
   showStatus("Annotation history cleared.", "success");
 }
 
-// Display completion message
 function showCompletionScreen() {
   sampleId.textContent = "Completed";
   sampleText.textContent =
@@ -347,7 +317,6 @@ function showCompletionScreen() {
   showStatus("Dataset review completed successfully.", "success");
 }
 
-// Enable buttons when starting or restarting
 function enableControls() {
   submitButton.disabled = false;
   skipButton.disabled = false;
@@ -357,19 +326,16 @@ function enableControls() {
   });
 }
 
-// Show a status message
 function showStatus(message, type) {
   statusMessage.textContent = message;
   statusMessage.className = `status-message ${type}`;
 }
 
-// Remove a status message
 function clearStatus() {
   statusMessage.textContent = "";
   statusMessage.className = "status-message";
 }
 
-// Event listeners
 labelButtons.forEach((button) => {
   button.setAttribute("aria-pressed", "false");
   button.addEventListener("click", selectLabel);
@@ -384,5 +350,4 @@ clearHistoryButton.addEventListener("click", () => {
   enableControls();
 });
 
-// Start the application
 displayCurrentSample();
